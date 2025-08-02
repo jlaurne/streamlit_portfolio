@@ -151,14 +151,9 @@ if page == "Home":
     col1, col2 = st.columns([2, 1])
     with col1:
         st.write("""
-        I'm a results-driven Data Strategy professional with deep expertise in data product management, 
-        business analytics, and data architecture. Currently serving as Senior Analytics Engineer at 
-        The Walt Disney Company, I specialize in building unified data solutions and translating complex 
-        data requirements into actionable insights.
-        
-        My experience spans from government consulting with Deloitte and Booz Allen Hamilton to 
-        innovative retail analytics at Walmart's Store No. 8, giving me a unique perspective on 
-        data applications across industries.
+        IMy career journey has spanned various industries, from consulting at Deloitte and IBM to spearheading data initiatives in immersive commerce at Walmart's Store No. 8. My current role is Sr. Analytics Engineer at The Walt Disney Company, where I lead the design and development of unified data solutions for Organizational Management and broader HR initiatives. My educational background includes a M.S. in Emerging Technologies from New York University's Tandon School of Engineering , an M.S. in Analytics from American University , and a B.S. in Finance from Southern University and A & M College. My technical skills include R, Tableau, SQL, Python, Data Warehouse, and Machine Learning , with a passion for data-driven decision-making, human-computer interaction, and strategic innovation.
+
+This app is designed to showcase projects that reflect my passion for three distinct areas of work. The first area is Strategic Innovation and Human-Computer Interaction (HCI), inspired by my experience in immersive commerce and my education in emerging technologies. The second area, People Analytics, is a direct reflection of my current role and dedication to building scalable data solutions to support organizational management. Finally, the third area, Gentrification's Impact on Cultural Identities of American Cities, stems from my interest in Urban Informatics and my personal connection to my birthplace, New Orleans, and my past work in underserved communities.
         """)
     
     with col2:
