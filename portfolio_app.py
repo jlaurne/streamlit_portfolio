@@ -13,32 +13,88 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for styling
+# Custom CSS for styling with Montserrat font and soft green theme
 st.markdown("""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+    
+    html, body, [class*="css"] {
+        font-family: 'Montserrat', sans-serif;
+    }
+    
     .main-header {
+        font-family: 'Montserrat', sans-serif;
         font-size: 3rem;
-        color: #1f77b4;
+        font-weight: 700;
+        color: #2d5016;
         text-align: center;
         margin-bottom: 1rem;
     }
+    
     .section-header {
+        font-family: 'Montserrat', sans-serif;
         font-size: 2rem;
-        color: #2c3e50;
+        font-weight: 600;
+        color: #3d6b20;
         margin-top: 2rem;
         margin-bottom: 1rem;
     }
+    
     .highlight-box {
-        background-color: #f8f9fa;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border-left: 4px solid #1f77b4;
+        background: linear-gradient(135deg, #f0f8e8 0%, #e8f5d8 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #7cb342;
+        box-shadow: 0 4px 6px rgba(124, 179, 66, 0.1);
+        margin-bottom: 1rem;
     }
+    
     .metric-card {
-        background-color: #ffffff;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        background: linear-gradient(135deg, #ffffff 0%, #f8fcf4 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(124, 179, 66, 0.15);
+        border: 1px solid #e8f5d8;
+    }
+    
+    .work-in-progress {
+        background-color: #fff8e1;
+        padding: 0.8rem;
+        border-radius: 8px;
+        border-left: 4px solid #ffb74d;
+        margin: 1rem 0;
+        font-style: italic;
+        color: #e65100;
+    }
+    
+    .about-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #2e4014;
+        text-align: justify;
+    }
+    
+    .profile-container {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+    
+    .profile-image {
+        border-radius: 50%;
+        border: 4px solid #7cb342;
+        box-shadow: 0 4px 12px rgba(124, 179, 66, 0.3);
+    }
+    
+    /* Update sidebar */
+    .css-1d391kg {
+        background-color: #f0f8e8;
+    }
+    
+    /* Update main content area */
+    .css-18e3th9 {
+        padding-top: 2rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -116,6 +172,8 @@ if page == "Home":
 elif page == "Strategic Innovation & HCI":
     st.markdown('<div class="main-header">🚀 Strategic Innovation & HCI</div>', unsafe_allow_html=True)
     st.markdown("*Exploring human-computer interaction through emerging technologies and data-driven innovation*")
+    
+    st.markdown('<div class="work-in-progress">🚧 Work in Progress: These projects are currently in development and showcase conceptual frameworks and methodologies.</div>', unsafe_allow_html=True)
     
     # Project selector
     hci_project = st.selectbox(
@@ -335,6 +393,8 @@ elif page == "People Analytics":
     st.markdown('<div class="main-header">👥 People Analytics</div>', unsafe_allow_html=True)
     st.markdown("*Leveraging HR data insights from Disney's Talent Acquisition and People Data initiatives*")
     
+    st.markdown('<div class="work-in-progress">🚧 Work in Progress: These analytics frameworks reflect methodologies developed in my current role, with sample data for demonstration purposes.</div>', unsafe_allow_html=True)
+    
     # Project selector
     people_project = st.selectbox(
         "Select a people analytics project:",
@@ -377,6 +437,8 @@ elif page == "People Analytics":
 elif page == "Urban Impact & Community Data":
     st.markdown('<div class="main-header">🏙️ Urban Impact & Community Data</div>', unsafe_allow_html=True)
     st.markdown("*Exploring gentrification patterns and cultural preservation in New Orleans and beyond*")
+    
+    st.markdown('<div class="work-in-progress">🚧 Work in Progress: This research area combines personal passion with urban informatics methodology, using simulated data to demonstrate analytical approaches.</div>', unsafe_allow_html=True)
     
     # Project selector
     urban_project = st.selectbox(
