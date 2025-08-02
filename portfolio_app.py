@@ -450,9 +450,9 @@ elif page == "Strategic Innovation & HCI":
 # People Analytics Page
 elif page == "People Analytics":
     st.markdown('<div class="main-header">👥 People Analytics</div>', unsafe_allow_html=True)
-    st.markdown("*Leveraging HR data insights from Disney's Talent Acquisition and People Data initiatives*")
+    st.markdown("*Leveraging HR data insights from Talent Acquisition and People Data initiatives*")
     
-    st.markdown('<div class="work-in-progress">🚧 Work in Progress: These analytics frameworks reflect methodologies developed in my current role, with sample data for demonstration purposes.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="work-in-progress">🚧 Work in Progress: These analytics frameworks reflect methodologies with sample data for demonstration purposes only.</div>', unsafe_allow_html=True)
     
     # Project selector
     people_project = st.selectbox(
