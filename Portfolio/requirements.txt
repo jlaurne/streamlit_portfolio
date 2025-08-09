@@ -1,0 +1,7 @@
+streamlit
+plotly
+pandas
+numpy
+streamlit>=1.36.0
+altair
+reportlab

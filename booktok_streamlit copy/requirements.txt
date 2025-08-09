@@ -1,0 +1,12 @@
+streamlit
+plotly
+pandas
+numpy
+streamlit>=1.36.0
+altair
+reportlab
+firestore
+services
+google-cloud-firestore
+google-auth
+protobuf==3.20.3
