@@ -107,7 +107,7 @@ st.sidebar.markdown("---")
 # Reading Progress
 st.sidebar.markdown("### 📚 Reading Progress")
 Ketchup_progress = st.session_state.reading_progress['Ketchup']
-your_progress = st.session_state.reading_progress['Snick']
+Snick_progress = st.session_state.reading_progress['Snick']
 
 st.sidebar.markdown(f"**Ketchup:** Reading Novellas 5.5/5.6 ({Ketchup_progress['progress_percent']}%)")
 st.sidebar.markdown(f"**Snick:** Completed Series ✨")
@@ -124,16 +124,16 @@ st.sidebar.info("🚨 Spoiler Protection Active! Only discussions for completed 
 
 # Books data
 books = [
-    {"num": 1, "title": "The Awakening", "status_Ketchup": "Complete", "status_you": "Complete"},
-    {"num": 2, "title": "Ruthless Fae", "status_Ketchup": "Complete", "status_you": "Complete"},
-    {"num": 3, "title": "The Reckoning", "status_Ketchup": "Complete", "status_you": "Complete"},
-    {"num": 4, "title": "Shadow Princess", "status_Ketchup": "Complete", "status_you": "Complete"},
-    {"num": 5, "title": "Cursed Fates", "status_Ketchup": "Complete", "status_you": "Complete"},
-    {"num": "5.5", "title": "The Big A.S.S. Party", "status_Ketchup": "Reading", "status_you": "Complete"},
-    {"num": "5.6", "title": "Seth on the Moon", "status_Ketchup": "Reading", "status_you": "Complete"},
-    {"num": 6, "title": "Fated Throne", "status_Ketchup": "Not Started", "status_you": "Complete"},
-    {"num": 7, "title": "Heartless Sky", "status_Ketchup": "Not Started", "status_you": "Complete"},
-    {"num": 8, "title": "Sorrow and Starlight", "status_Ketchup": "Not Started", "status_you": "Complete"}
+    {"num": 1, "title": "The Awakening", "status_Ketchup": "Complete", "status_Snick": "Complete"},
+    {"num": 2, "title": "Ruthless Fae", "status_Ketchup": "Complete", "status_Snick": "Complete"},
+    {"num": 3, "title": "The Reckoning", "status_Ketchup": "Complete", "status_Snick": "Complete"},
+    {"num": 4, "title": "Shadow Princess", "status_Ketchup": "Complete", "status_Snick": "Complete"},
+    {"num": 5, "title": "Cursed Fates", "status_Ketchup": "Complete", "status_Snick": "Complete"},
+    {"num": "5.5", "title": "The Big A.S.S. Party", "status_Ketchup": "Reading", "status_Snick": "Complete"},
+    {"num": "5.6", "title": "Seth on the Moon", "status_Ketchup": "Reading", "status_Snick": "Complete"},
+    {"num": 6, "title": "Fated Throne", "status_Ketchup": "Not Started", "status_Snick": "Complete"},
+    {"num": 7, "title": "Heartless Sky", "status_Ketchup": "Not Started", "status_Snick": "Complete"},
+    {"num": 8, "title": "Sorrow and Starlight", "status_Ketchup": "Not Started", "status_Snick": "Complete"}
 ]
 
 # Main content
@@ -159,9 +159,9 @@ if page == "📖 Reading Dashboard":
             marker_color='#FF6B9D'
         ))
         fig.add_trace(go.Bar(
-            name='You',
+            name='Snick',
             x=[f"Book {b['num']}" for b in books],
-            y=[1 if b['status_you'] == 'Complete' else 0 for b in books],
+            y=[1 if b['status_Snick'] == 'Complete' else 0 for b in books],
             marker_color='#4A0E4E'
         ))
         
