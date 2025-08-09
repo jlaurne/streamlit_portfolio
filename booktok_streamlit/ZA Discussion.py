@@ -96,8 +96,8 @@ if 'discussions' not in st.session_state:
 
 if 'reading_progress' not in st.session_state:
     st.session_state.reading_progress = {
-        'your_friend': {'current_book': '5.5/5.6', 'progress_percent': 85, 'last_update': '2025-08-08'},
-        'you': {'current_book': 8, 'progress_percent': 100, 'last_update': '2024-12-15'}
+        'Ketchup': {'current_book': '5.5/5.6', 'progress_percent': 85, 'last_update': '2025-08-08'},
+        'Snick': {'current_book': 8, 'progress_percent': 100, 'last_update': '2024-12-15'}
     }
 
 # Sidebar
@@ -106,11 +106,11 @@ st.sidebar.markdown("---")
 
 # Reading Progress
 st.sidebar.markdown("### 📚 Reading Progress")
-friend_progress = st.session_state.reading_progress['your_friend']
-your_progress = st.session_state.reading_progress['you']
+Ketchup_progress = st.session_state.reading_progress['Ketchup']
+your_progress = st.session_state.reading_progress['Snick']
 
-st.sidebar.markdown(f"**Your Friend:** Reading Novellas 5.5/5.6 ({friend_progress['progress_percent']}%)")
-st.sidebar.markdown(f"**You:** Completed Series ✨")
+st.sidebar.markdown(f"**Ketchup:** Reading Novellas 5.5/5.6 ({Ketchup_progress['progress_percent']}%)")
+st.sidebar.markdown(f"**Snick:** Completed Series ✨")
 
 # Navigation
 page = st.sidebar.selectbox(
@@ -124,16 +124,16 @@ st.sidebar.info("🚨 Spoiler Protection Active! Only discussions for completed 
 
 # Books data
 books = [
-    {"num": 1, "title": "The Awakening", "status_friend": "Complete", "status_you": "Complete"},
-    {"num": 2, "title": "Ruthless Fae", "status_friend": "Complete", "status_you": "Complete"},
-    {"num": 3, "title": "The Reckoning", "status_friend": "Complete", "status_you": "Complete"},
-    {"num": 4, "title": "Shadow Princess", "status_friend": "Complete", "status_you": "Complete"},
-    {"num": 5, "title": "Cursed Fates", "status_friend": "Complete", "status_you": "Complete"},
-    {"num": "5.5", "title": "The Big A.S.S. Party", "status_friend": "Reading", "status_you": "Complete"},
-    {"num": "5.6", "title": "Seth on the Moon", "status_friend": "Reading", "status_you": "Complete"},
-    {"num": 6, "title": "Fated Throne", "status_friend": "Not Started", "status_you": "Complete"},
-    {"num": 7, "title": "Heartless Sky", "status_friend": "Not Started", "status_you": "Complete"},
-    {"num": 8, "title": "Sorrow and Starlight", "status_friend": "Not Started", "status_you": "Complete"}
+    {"num": 1, "title": "The Awakening", "status_Ketchup": "Complete", "status_you": "Complete"},
+    {"num": 2, "title": "Ruthless Fae", "status_Ketchup": "Complete", "status_you": "Complete"},
+    {"num": 3, "title": "The Reckoning", "status_Ketchup": "Complete", "status_you": "Complete"},
+    {"num": 4, "title": "Shadow Princess", "status_Ketchup": "Complete", "status_you": "Complete"},
+    {"num": 5, "title": "Cursed Fates", "status_Ketchup": "Complete", "status_you": "Complete"},
+    {"num": "5.5", "title": "The Big A.S.S. Party", "status_Ketchup": "Reading", "status_you": "Complete"},
+    {"num": "5.6", "title": "Seth on the Moon", "status_Ketchup": "Reading", "status_you": "Complete"},
+    {"num": 6, "title": "Fated Throne", "status_Ketchup": "Not Started", "status_you": "Complete"},
+    {"num": 7, "title": "Heartless Sky", "status_Ketchup": "Not Started", "status_you": "Complete"},
+    {"num": 8, "title": "Sorrow and Starlight", "status_Ketchup": "Not Started", "status_you": "Complete"}
 ]
 
 # Main content
@@ -153,9 +153,9 @@ if page == "📖 Reading Dashboard":
         
         fig = go.Figure()
         fig.add_trace(go.Bar(
-            name='Your Friend',
+            name='Ketchup',
             x=[f"Book {b['num']}" for b in books],
-            y=[1 if b['status_friend'] == 'Complete' else 0.5 if b['status_friend'] == 'Reading' else 0 for b in books],
+            y=[1 if b['status_Ketchup'] == 'Complete' else 0.5 if b['status_Ketchup'] == 'Reading' else 0 for b in books],
             marker_color='#FF6B9D'
         ))
         fig.add_trace(go.Bar(
@@ -179,7 +179,7 @@ if page == "📖 Reading Dashboard":
     with col2:
         st.markdown('<div class="book-card">', unsafe_allow_html=True)
         st.markdown("### 🎯 Current Status")
-        st.markdown("**Your Friend is reading:** The Big A.S.S. Party & Seth on the Moon")
+        st.markdown("**Ketchup is reading:** The Big A.S.S. Party & Seth on the Moon")
         st.markdown("**Current focus:** Post-Book 5 short stories and character moments")
         st.markdown("**Safe to discuss:** EVERYTHING through Book 5!")
         st.markdown("**⚠️ AVOID:** Book 6+ spoilers (Fated Throne and beyond)")
@@ -195,10 +195,10 @@ if page == "📖 Reading Dashboard":
     cols = st.columns(4)
     for i, book in enumerate(books[:4]):
         with cols[i % 4]:
-            if book['status_friend'] == 'Reading':
+            if book['status_Ketchup'] == 'Reading':
                 card_class = 'theory-box'
                 status_emoji = '📖'
-            elif book['status_friend'] == 'Complete':
+            elif book['status_Ketchup'] == 'Complete':
                 card_class = 'safe-zone'
                 status_emoji = '✅'
             else:
@@ -208,7 +208,7 @@ if page == "📖 Reading Dashboard":
             st.markdown(f'<div class="{card_class}">', unsafe_allow_html=True)
             st.markdown(f"### {status_emoji} Book {book['num']}")
             st.markdown(f"**{book['title']}**")
-            st.markdown(f"Friend: {book['status_friend']}")
+            st.markdown(f"Ketchup: {book['status_Ketchup']}")
             st.markdown('</div>', unsafe_allow_html=True)
 
 elif page == "💭 Books 1-5 Discussion":
@@ -217,7 +217,7 @@ elif page == "💭 Books 1-5 Discussion":
     
     st.markdown('<div class="safe-zone">', unsafe_allow_html=True)
     st.markdown("### ✅ SAFE TO DISCUSS: Books 1-5 Complete!")
-    st.markdown("Your friend has been through the emotional gauntlet - discuss away!")
+    st.markdown("Ketchup has been through the emotional gauntlet - discuss away!")
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Discussion categories for Books 1-5
@@ -320,7 +320,7 @@ elif page == "⚡ Character Deep Dive":
     
     st.markdown('<div class="spoiler-zone">', unsafe_allow_html=True)
     st.markdown("### 🚨 SPOILER WARNING")
-    st.markdown("This section contains character analysis across the full series. Only view after your friend finishes more books!")
+    st.markdown("This section contains character analysis across the full series. Only view after Ketchup finishes more books!")
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Character evolution tracking (for when she's further along)
@@ -334,7 +334,7 @@ elif page == "⚡ Character Deep Dive":
     }
     
     if st.button("🔓 UNLOCK CHARACTER ANALYSIS (Spoiler Alert!)"):
-        st.warning("Remember: Your friend is only on Book 1! Don't accidentally spoil anything!")
+        st.warning("Remember: Ketchup is only on Book 1! Don't accidentally spoil anything!")
         
         for char, stats in characters.items():
             col1, col2 = st.columns([1, 2])
@@ -372,7 +372,7 @@ elif page == "🔮 What's Coming Next":
             st.markdown("- Have tissues ready")
             st.markdown("- Clear your schedule")
             st.markdown("- Prepare for book hangover")
-            st.markdown("- Maybe warn your friends you'll be unavailable")
+            st.markdown("- Maybe warn Ketchup you'll be unavailable")
         
         with tab3:
             st.markdown("### 🌟 Series Finale")
@@ -423,7 +423,7 @@ elif page == "📝 Add Thoughts":
     # Quick thought logger
     thought_category = st.selectbox("What kind of thought?", 
                                    ["Book 1 Safe", "Character Development", "Plot Theory", 
-                                    "Emotional Reaction", "Favorite Quote", "Question for Friend"])
+                                    "Emotional Reaction", "Favorite Quote", "Question for Ketchup"])
     
     thought_content = st.text_area("Your thought:", height=150)
     spoiler_level = st.selectbox("Spoiler Level:", ["Safe (Book 1)", "Minor Spoilers", "Major Spoilers", "Series Ending"])
