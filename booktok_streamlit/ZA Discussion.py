@@ -61,12 +61,16 @@ def add_discussion(db, book_num, chapter, author, content):
     return True
 
 def get_discussions(db, book_num, max_chapter):
-    """Fetches discussions for a book, respecting the user's progress to avoid spoilers."""
-    comments_ref = db.collection('discussions').where('book_num', '==', book_num)
-    # This is the spoiler protection: only get comments for chapters the user has read
-    comments_ref = comments_ref.where('chapter', '<=', max_chapter).order_by('chapter').order_by('timestamp')
-    docs = comments_ref.stream()
-    return [doc.to_dict() for doc in docs]
+    """Fetches discussions, now with error handling."""
+    try:
+        comments_ref = db.collection('discussions').where('book_num', '==', book_num)
+        comments_ref = comments_ref.where('chapter', '<=', max_chapter).order_by('chapter').order_by('timestamp')
+        docs = comments_ref.stream()
+        return [doc.to_dict() for doc in docs]
+    except Exception as e:
+        # If an error occurs, display it on the app screen
+        st.error(f"A database error occurred: {e}")
+        return [] # Return an empty list so the app doesn't crash
 
 # --- APP CONFIGURATION ---
 st.set_page_config(
