@@ -4,6 +4,8 @@ import datetime
 from datetime import date
 import plotly.express as px
 import plotly.graph_objects as go
+import json
+import os
 
 # Page configuration
 st.set_page_config(
@@ -84,21 +86,39 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state for storing discussions
-if 'discussions' not in st.session_state:
-    st.session_state.discussions = {
-        'book1_safe': [],
-        'book1_spoilers': [],
-        'character_thoughts': [],
-        'theories': [],
-        'emotional_damage': []
-    }
+# Data persistence functions
+def load_data():
+    """Load data from session state or initialize default"""
+    if 'book_data_loaded' not in st.session_state:
+        st.session_state.discussions = {
+            'book1_safe': [],
+            'character_thoughts': [],
+            'theories': [],
+            'emotional_damage': [],
+            'books_1_5': [],
+            'short_stories': []
+        }
+        st.session_state.reading_progress = {
+            'your_friend': {'current_book': '5.5/5.6', 'progress_percent': 85, 'last_update': '2025-08-08'},
+            'you': {'current_book': 8, 'progress_percent': 100, 'last_update': '2024-12-15'}
+        }
+        st.session_state.book_data_loaded = True
 
-if 'reading_progress' not in st.session_state:
-    st.session_state.reading_progress = {
-        'Ketchup': {'current_book': '5.5/5.6', 'progress_percent': 85, 'last_update': '2025-08-08'},
-        'Snick': {'current_book': 8, 'progress_percent': 100, 'last_update': '2024-12-15'}
+def save_discussion(category, content, author="You"):
+    """Save a discussion entry"""
+    entry = {
+        'author': author,
+        'date': str(date.today()),
+        'content': content,
+        'timestamp': str(datetime.datetime.now())
     }
+    if category not in st.session_state.discussions:
+        st.session_state.discussions[category] = []
+    st.session_state.discussions[category].append(entry)
+    return True
+
+# Initialize data
+load_data()
 
 # Sidebar
 st.sidebar.title("⭐ Zodiac Academy Book Club")
@@ -106,17 +126,17 @@ st.sidebar.markdown("---")
 
 # Reading Progress
 st.sidebar.markdown("### 📚 Reading Progress")
-Ketchup_progress = st.session_state.reading_progress['Ketchup']
-Snick_progress = st.session_state.reading_progress['Snick']
+friend_progress = st.session_state.reading_progress['your_friend']
+your_progress = st.session_state.reading_progress['you']
 
-st.sidebar.markdown(f"**Ketchup:** Reading Novellas 5.5/5.6 ({Ketchup_progress['progress_percent']}%)")
-st.sidebar.markdown(f"**Snick:** Completed Series ✨")
+st.sidebar.markdown(f"**Your Friend:** Reading Novellas 5.5/5.6 ({friend_progress['progress_percent']}%)")
+st.sidebar.markdown(f"**You:** Completed Series ✨")
 
 # Navigation
 page = st.sidebar.selectbox(
     "Navigate to:",
     ["📖 Reading Dashboard", "💭 Books 1-5 Discussion", "🎉 Short Stories", "⚡ Character Deep Dive", 
-     "🔮 What's Coming Next", "💔 We Need to Talk About Book 4", "📝 Add Thoughts"]
+     "🔮 What's Coming Next", "💔 We Need to Talk About Book 4", "📝 Add Thoughts", "⚙️ Update Progress"]
 )
 
 st.sidebar.markdown("---")
@@ -124,16 +144,16 @@ st.sidebar.info("🚨 Spoiler Protection Active! Only discussions for completed 
 
 # Books data
 books = [
-    {"num": 1, "title": "The Awakening", "status_Ketchup": "Complete", "status_Snick": "Complete"},
-    {"num": 2, "title": "Ruthless Fae", "status_Ketchup": "Complete", "status_Snick": "Complete"},
-    {"num": 3, "title": "The Reckoning", "status_Ketchup": "Complete", "status_Snick": "Complete"},
-    {"num": 4, "title": "Shadow Princess", "status_Ketchup": "Complete", "status_Snick": "Complete"},
-    {"num": 5, "title": "Cursed Fates", "status_Ketchup": "Complete", "status_Snick": "Complete"},
-    {"num": "5.5", "title": "The Big A.S.S. Party", "status_Ketchup": "Reading", "status_Snick": "Complete"},
-    {"num": "5.6", "title": "Seth on the Moon", "status_Ketchup": "Reading", "status_Snick": "Complete"},
-    {"num": 6, "title": "Fated Throne", "status_Ketchup": "Not Started", "status_Snick": "Complete"},
-    {"num": 7, "title": "Heartless Sky", "status_Ketchup": "Not Started", "status_Snick": "Complete"},
-    {"num": 8, "title": "Sorrow and Starlight", "status_Ketchup": "Not Started", "status_Snick": "Complete"}
+    {"num": 1, "title": "The Awakening", "status_friend": "Complete", "status_you": "Complete"},
+    {"num": 2, "title": "Ruthless Fae", "status_friend": "Complete", "status_you": "Complete"},
+    {"num": 3, "title": "The Reckoning", "status_friend": "Complete", "status_you": "Complete"},
+    {"num": 4, "title": "Shadow Princess", "status_friend": "Complete", "status_you": "Complete"},
+    {"num": 5, "title": "Cursed Fates", "status_friend": "Complete", "status_you": "Complete"},
+    {"num": "5.5", "title": "The Big A.S.S. Party", "status_friend": "Reading", "status_you": "Complete"},
+    {"num": "5.6", "title": "Seth on the Moon", "status_friend": "Reading", "status_you": "Complete"},
+    {"num": 6, "title": "Fated Throne", "status_friend": "Not Started", "status_you": "Complete"},
+    {"num": 7, "title": "Heartless Sky", "status_friend": "Not Started", "status_you": "Complete"},
+    {"num": 8, "title": "Sorrow and Starlight", "status_friend": "Not Started", "status_you": "Complete"}
 ]
 
 # Main content
@@ -153,15 +173,15 @@ if page == "📖 Reading Dashboard":
         
         fig = go.Figure()
         fig.add_trace(go.Bar(
-            name='Ketchup',
+            name='Your Friend',
             x=[f"Book {b['num']}" for b in books],
-            y=[1 if b['status_Ketchup'] == 'Complete' else 0.5 if b['status_Ketchup'] == 'Reading' else 0 for b in books],
+            y=[1 if b['status_friend'] == 'Complete' else 0.5 if b['status_friend'] == 'Reading' else 0 for b in books],
             marker_color='#FF6B9D'
         ))
         fig.add_trace(go.Bar(
-            name='Snick',
+            name='You',
             x=[f"Book {b['num']}" for b in books],
-            y=[1 if b['status_Snick'] == 'Complete' else 0 for b in books],
+            y=[1 if b['status_you'] == 'Complete' else 0 for b in books],
             marker_color='#4A0E4E'
         ))
         
@@ -179,7 +199,7 @@ if page == "📖 Reading Dashboard":
     with col2:
         st.markdown('<div class="book-card">', unsafe_allow_html=True)
         st.markdown("### 🎯 Current Status")
-        st.markdown("**Ketchup is reading:** The Big A.S.S. Party & Seth on the Moon")
+        st.markdown("**Your Friend is reading:** The Big A.S.S. Party & Seth on the Moon")
         st.markdown("**Current focus:** Post-Book 5 short stories and character moments")
         st.markdown("**Safe to discuss:** EVERYTHING through Book 5!")
         st.markdown("**⚠️ AVOID:** Book 6+ spoilers (Fated Throne and beyond)")
@@ -195,10 +215,10 @@ if page == "📖 Reading Dashboard":
     cols = st.columns(4)
     for i, book in enumerate(books[:4]):
         with cols[i % 4]:
-            if book['status_Ketchup'] == 'Reading':
+            if book['status_friend'] == 'Reading':
                 card_class = 'theory-box'
                 status_emoji = '📖'
-            elif book['status_Ketchup'] == 'Complete':
+            elif book['status_friend'] == 'Complete':
                 card_class = 'safe-zone'
                 status_emoji = '✅'
             else:
@@ -208,7 +228,7 @@ if page == "📖 Reading Dashboard":
             st.markdown(f'<div class="{card_class}">', unsafe_allow_html=True)
             st.markdown(f"### {status_emoji} Book {book['num']}")
             st.markdown(f"**{book['title']}**")
-            st.markdown(f"Ketchup: {book['status_Ketchup']}")
+            st.markdown(f"Friend: {book['status_friend']}")
             st.markdown('</div>', unsafe_allow_html=True)
 
 elif page == "💭 Books 1-5 Discussion":
@@ -217,7 +237,7 @@ elif page == "💭 Books 1-5 Discussion":
     
     st.markdown('<div class="safe-zone">', unsafe_allow_html=True)
     st.markdown("### ✅ SAFE TO DISCUSS: Books 1-5 Complete!")
-    st.markdown("Ketchup has been through the emotional gauntlet - discuss away!")
+    st.markdown("Your friend has been through the emotional gauntlet - discuss away!")
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Discussion categories for Books 1-5
@@ -233,7 +253,10 @@ elif page == "💭 Books 1-5 Discussion":
         
         book12_thought = st.text_area("Your thoughts on the early books now that you've seen the full character development:")
         if st.button("Add Book 1-2 Thoughts"):
-            st.success("Thoughts saved!")
+            if book12_thought:
+                save_discussion('books_1_5', book12_thought, "You")
+                st.success("Thoughts saved!")
+                st.rerun()
     
     with tab2:
         st.markdown("### ⚡ Book 3: The Reckoning")
@@ -296,6 +319,10 @@ elif page == "🎉 Short Stories":
         st.markdown("- Setup moments for what's coming")
         
         party_thoughts = st.text_area("Your thoughts on The Big A.S.S. Party:")
+        if st.button("Save Party Thoughts"):
+            if party_thoughts:
+                save_discussion('short_stories', f"Big A.S.S. Party: {party_thoughts}", "You")
+                st.success("Party thoughts saved!")
         
     with col2:
         st.markdown("### 🌙 Seth on the Moon (5.6)")
@@ -306,6 +333,10 @@ elif page == "🎉 Short Stories":
         st.markdown("- How it fits into the larger narrative")
         
         seth_thoughts = st.text_area("Your thoughts on Seth's story:")
+        if st.button("Save Seth Thoughts"):
+            if seth_thoughts:
+                save_discussion('short_stories', f"Seth on the Moon: {seth_thoughts}", "You")
+                st.success("Seth thoughts saved!")
     
     st.markdown("### 💭 Short Story Impact")
     st.markdown("How do these shorter pieces add to the overall series? What new insights do they give?")
@@ -313,14 +344,26 @@ elif page == "🎉 Short Stories":
     comparison_thoughts = st.text_area("How do these short stories enhance the main series for you?")
     
     if st.button("Save Short Story Thoughts"):
-        st.success("Short story discussions saved!")
+        if comparison_thoughts:
+            save_discussion('short_stories', f"Short story comparison: {comparison_thoughts}", "You")
+            st.success("Short story discussions saved!")
+    
+    # Display saved short story discussions
+    st.markdown("### 💬 Previous Short Story Discussions")
+    if st.session_state.discussions.get('short_stories'):
+        for discussion in st.session_state.discussions['short_stories']:
+            st.markdown(f"**{discussion['author']}** - {discussion['date']}")
+            st.markdown(f"> {discussion['content']}")
+            st.markdown("---")
+    else:
+        st.info("No discussions yet. Add your thoughts above!")
 
 elif page == "⚡ Character Deep Dive":
     st.markdown('<div class="main-header">Character Analysis</div>', unsafe_allow_html=True)
     
     st.markdown('<div class="spoiler-zone">', unsafe_allow_html=True)
     st.markdown("### 🚨 SPOILER WARNING")
-    st.markdown("This section contains character analysis across the full series. Only view after Ketchup finishes more books!")
+    st.markdown("This section contains character analysis across the full series. Only view after your friend finishes more books!")
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Character evolution tracking (for when she's further along)
@@ -334,7 +377,7 @@ elif page == "⚡ Character Deep Dive":
     }
     
     if st.button("🔓 UNLOCK CHARACTER ANALYSIS (Spoiler Alert!)"):
-        st.warning("Remember: Ketchup is only on Book 1! Don't accidentally spoil anything!")
+        st.warning("Remember: Your friend is only on Book 1! Don't accidentally spoil anything!")
         
         for char, stats in characters.items():
             col1, col2 = st.columns([1, 2])
@@ -372,7 +415,7 @@ elif page == "🔮 What's Coming Next":
             st.markdown("- Have tissues ready")
             st.markdown("- Clear your schedule")
             st.markdown("- Prepare for book hangover")
-            st.markdown("- Maybe warn Ketchup you'll be unavailable")
+            st.markdown("- Maybe warn your friends you'll be unavailable")
         
         with tab3:
             st.markdown("### 🌟 Series Finale")
@@ -423,26 +466,73 @@ elif page == "📝 Add Thoughts":
     # Quick thought logger
     thought_category = st.selectbox("What kind of thought?", 
                                    ["Book 1 Safe", "Character Development", "Plot Theory", 
-                                    "Emotional Reaction", "Favorite Quote", "Question for Ketchup"])
+                                    "Emotional Reaction", "Favorite Quote", "Question for Friend"])
     
     thought_content = st.text_area("Your thought:", height=150)
     spoiler_level = st.selectbox("Spoiler Level:", ["Safe (Book 1)", "Minor Spoilers", "Major Spoilers", "Series Ending"])
     
     if st.button("Save Thought"):
-        # Save to appropriate category
-        new_thought = {
-            'content': thought_content,
-            'category': thought_category,
-            'spoiler_level': spoiler_level,
-            'date': str(date.today())
-        }
-        
-        if spoiler_level == "Safe (Book 1)":
-            st.session_state.discussions['book1_safe'].append(new_thought)
+        if thought_content:
+            save_discussion('general_thoughts', thought_content, "You")
+            st.success("Thought saved! It will appear in the appropriate section.")
+            st.rerun()
         else:
-            st.session_state.discussions['character_thoughts'].append(new_thought)
+            st.warning("Please enter a thought before saving.")
+
+elif page == "⚙️ Update Progress":
+    st.markdown('<div class="main-header">Update Reading Progress</div>', unsafe_allow_html=True)
+    
+    st.markdown("### 📚 Update Your Friend's Progress")
+    
+    # Friend's progress update
+    friend_book = st.selectbox("What book is your friend currently reading?", 
+                              ["Book 5.5: The Big A.S.S. Party", "Book 5.6: Seth on the Moon", 
+                               "Book 6: Fated Throne", "Book 7: Heartless Sky", "Book 8: Sorrow and Starlight"])
+    
+    friend_progress = st.slider("Progress percentage:", 0, 100, 
+                               st.session_state.reading_progress['your_friend']['progress_percent'])
+    
+    if st.button("Update Friend's Progress"):
+        st.session_state.reading_progress['your_friend']['progress_percent'] = friend_progress
+        st.session_state.reading_progress['your_friend']['current_book'] = friend_book
+        st.session_state.reading_progress['your_friend']['last_update'] = str(date.today())
+        st.success("Progress updated!")
+        st.rerun()
+    
+    st.markdown("### 👥 Add Discussion Partner")
+    st.markdown("Want to add your friend as a user so she can add her own thoughts?")
+    
+    partner_name = st.text_input("Friend's name:")
+    if st.button("Add Discussion Partner"):
+        if partner_name:
+            st.session_state.discussion_partners = st.session_state.get('discussion_partners', [])
+            st.session_state.discussion_partners.append(partner_name)
+            st.success(f"Added {partner_name} as a discussion partner!")
+    
+    st.markdown("### 💾 Export Discussions")
+    if st.button("Download All Discussions"):
+        # Create a summary of all discussions
+        all_discussions = []
+        for category, discussions in st.session_state.discussions.items():
+            for discussion in discussions:
+                all_discussions.append({
+                    'Category': category,
+                    'Author': discussion['author'],
+                    'Date': discussion['date'],
+                    'Content': discussion['content']
+                })
         
-        st.success("Thought saved! It will appear in the appropriate section.")
+        if all_discussions:
+            df = pd.DataFrame(all_discussions)
+            csv = df.to_csv(index=False)
+            st.download_button(
+                label="Download CSV",
+                data=csv,
+                file_name=f"zodiac_academy_discussions_{date.today()}.csv",
+                mime="text/csv"
+            )
+        else:
+            st.info("No discussions to export yet!")
 
 # Footer
 st.markdown("---")
