@@ -7,3 +7,6 @@ altair
 reportlab
 firestore
 services
+google-cloud-firestore
+google-auth
+protobuf==3.20.3
