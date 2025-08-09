@@ -346,7 +346,7 @@ elif page == "⚡ Character Deep Dive":
                 st.progress(stats['power']/100, text=f"Power Evolution: {stats['power']}%")
 
 elif page == "🔮 What's Coming Next":
-    st.markdown('<div class="main-header">What's Coming Next</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">What\'s Coming Next</div>', unsafe_allow_html=True)
     
     st.markdown('<div class="spoiler-zone">', unsafe_allow_html=True)
     st.markdown("### 🚨 SPOILER WARNING: Books 6-8")
