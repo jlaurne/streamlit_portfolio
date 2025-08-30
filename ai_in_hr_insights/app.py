@@ -4,13 +4,12 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime, timedelta
 
-# --- Firebase Initialization for Streamlit ---
-# Use st.secrets for secure credential management
+
 def init_firestore():
     if not firebase_admin._apps:
-        creds_dict = st.secrets["firebase"]["credentials"]
-        cred = credentials.Certificate(creds_dict)
-        firebase_admin.initialize_app(cred)
+        # Pass the entire 'firebase' section from secrets
+        creds = credentials.Certificate(st.secrets["firebase"])
+        firebase_admin.initialize_app(creds)
     return firestore.client()
 
 db = init_firestore()
