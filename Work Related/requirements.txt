@@ -1,6 +1,5 @@
 
 plotly
-altair
 reportlab
 firestore
 services
@@ -10,6 +9,7 @@ protobuf==3.20.3
 streamlit>=1.34.0
 pandas>=1.5.0
 numpy>=1.23.0
-scikit-learn
-transformers
-torch
+scikit-learn==1.5.1
+altair==5.3.0
+transformers==4.44.2
+torch==2.4.1
