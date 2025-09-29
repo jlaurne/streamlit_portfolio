@@ -39,7 +39,7 @@ def generate_fake_movements(seed=42, months=36, n_business_areas=5, seg2_per_ba=
                     for m in range(months):
                         month = (start + pd.DateOffset(months=m)).strftime("%Y-%m")
                         hires = np.random.poisson(lam=max(1, base_head*0.02))
-                        exits = np.random.poisson(lam=max(1, base_head*0.015 + 0.2*np.sin(m/6))))
+                        exits = np.random.poisson(lam=max(1, base_head*0.015 + 0.2*np.sin(m/6)))
                         # hires or exits may include transfers; we keep simple
                         records.append({
                             "business_area": ba,
@@ -252,7 +252,7 @@ chunks = dataframe_to_chunks(df[["business_area","seg2","seg3","seg4","month","h
 
 # init engines
 if use_hf:
-    emb_engine = EmbeddingEngine(model_name="google/embedding-gemma", hf_token=hf_token or None)
+    emb_engine = EmbeddingEngine(model_name="google/gemma-2b", hf_token=hf_token or None)
     lm_engine = LMEngine(model_name="google/gemma-7b-instruct", hf_token=hf_token or None)
 else:
     emb_engine = EmbeddingEngine(model_name=None)
